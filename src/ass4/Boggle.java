@@ -1,5 +1,11 @@
 package ass4;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 public class Boggle {
 
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -32,6 +38,8 @@ public class Boggle {
 
     private String[][] board;
 
+    private final Random random = new Random();
+
 
     public Boggle(int N) {
         this.board = new String[N][N];
@@ -40,15 +48,73 @@ public class Boggle {
     }
 
     public Boggle(String[][] board) {
-
+        this.board = board;
     }
 
     public Boggle(String[] dice) {
+
+        int diceIndex = 0;
+
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+
+                int letterIndex = random.nextInt(5);
+                char letter = ' ';
+
+                if (this.board.length == 4) {
+                    letter = BOGGLE_1992[diceIndex].charAt(letterIndex);
+                } else if (this.board.length == 5) {
+                    letter = BOGGLE_BIG[diceIndex].charAt(letterIndex);
+                }
+                diceIndex++;
+
+                this.board[i][j] = Character.toString(letter);
+            }
+        }
 
     }
 
     public Boggle(String filename) {
 
+
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+
+            int width = scanner.nextInt();
+            int height = scanner.nextInt();
+            scanner.nextLine();
+
+            String[][] board = new String[width][height];
+
+            int rowCounter = 0;
+            int columnCounter;
+            while (scanner.hasNextLine()) {
+                columnCounter = 0;
+                while (columnCounter < width) {
+                    board[rowCounter][columnCounter] = scanner.next();
+                    columnCounter++;
+                }
+                rowCounter++;
+                scanner.nextLine();
+            }
+
+            this.board = board;
+
+            scanner.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("No file found with that name.");
+        }
+    }
+
+    public boolean matchWord(String word) {
+        return true;
+    }
+
+    public static List<String> getAllValidWords(String dictionaryName, String boardName) {
+        return null;
     }
 
 }
