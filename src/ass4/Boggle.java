@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Boggle {
 
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     private static final double[] FREQUENCIES = {
             0.08167, 0.01492, 0.02782, 0.04253, 0.12703, 0.02228,
             0.02015, 0.06094, 0.06966, 0.00153, 0.00772, 0.04025,
@@ -44,6 +45,41 @@ public class Boggle {
     public Boggle(int N) {
         this.board = new String[N][N];
 
+        double[] cumulativeFreq = new double[26];
+        double total = 0;
+
+        for (int i = 0; i < 26; i++) {
+            total += FREQUENCIES[i];
+            cumulativeFreq[i] = total;
+        }
+
+        for (double val : cumulativeFreq) {
+            System.out.println(val);
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+
+                double selection = random.nextDouble(1);
+                System.out.println(selection);
+
+                // use the random double to select letter based on freq
+                for (int k = 0; k < 26; k++) {
+                    // if the random double is in the cumulative range, it will choose that char and set board space
+                    if (selection <= cumulativeFreq[k]) {
+                        this.board[i][j] = Character.toString(ALPHABET.charAt(k));
+                        k = 26; // first value found, so stop the k loop
+                    }
+                }
+            }
+        }
+
+        for (String[] strs : board) {
+            for (String s : strs) {
+                System.out.print(s + " ");
+            }
+            System.out.println();
+        }
 
     }
 
@@ -75,7 +111,6 @@ public class Boggle {
     }
 
     public Boggle(String filename) {
-
 
         try {
             File file = new File(filename);
@@ -115,6 +150,10 @@ public class Boggle {
 
     public static List<String> getAllValidWords(String dictionaryName, String boardName) {
         return null;
+    }
+
+    public static void main(String[] args) {
+        Boggle b = new Boggle(4);
     }
 
 }
