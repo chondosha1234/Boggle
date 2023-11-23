@@ -74,13 +74,6 @@ public class Boggle {
             }
         }
 
-        for (String[] strs : board) {
-            for (String s : strs) {
-                System.out.print(s + " ");
-            }
-            System.out.println();
-        }
-
     }
 
     public Boggle(String[][] board) {
@@ -89,19 +82,20 @@ public class Boggle {
 
     public Boggle(String[] dice) {
 
+        // dice array will have length equal to total number of board spaces, which will be a square of the dimensions i.e. 4x4, 5x5
+        int dimension = (int) Math.sqrt(dice.length);
+        this.board = new String[dimension][dimension];
+
         int diceIndex = 0;
 
         for (int i = 0; i < this.board.length; i++) {
             for (int j = 0; j < this.board[0].length; j++) {
 
-                int letterIndex = random.nextInt(5);
+                int letterIndex = random.nextInt(6);
                 char letter = ' ';
 
-                if (this.board.length == 4) {
-                    letter = BOGGLE_1992[diceIndex].charAt(letterIndex);
-                } else if (this.board.length == 5) {
-                    letter = BOGGLE_BIG[diceIndex].charAt(letterIndex);
-                }
+                letter = dice[diceIndex].charAt(letterIndex);
+
                 diceIndex++;
 
                 this.board[i][j] = Character.toString(letter);
@@ -153,7 +147,24 @@ public class Boggle {
     }
 
     public static void main(String[] args) {
-        Boggle b = new Boggle(4);
+        Boggle b = new Boggle(BOGGLE_1992);
+
+        System.out.println(b);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (String[] str : this.board) {
+            for (String s : str) {
+                sb.append(s.toLowerCase());
+                sb.append(" ");
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
 }
