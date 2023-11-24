@@ -161,6 +161,11 @@ public class Boggle {
      */
     private boolean searchGrid(int row, int col, String word, int index) {
 
+        // check board bounds
+        if (row < 0 || row > this.board.length || col < 0 || col > this.board[0].length) {
+            return false;
+        }
+
         String s = Character.toString(word.charAt(index));
         String character = this.board[row][col];
 
@@ -171,8 +176,35 @@ public class Boggle {
 
         if (s.equals(character)) {
             this.board[row][col] = character.toUpperCase();
-            return searchGrid(row + 1, col, word, index + 1);
 
+            if (searchGrid(row - 1, col - 1, word, index + 1)) {
+                // go up and left
+                return true;
+            } else if (searchGrid(row - 1, col, word, index + 1)) {
+                // go up
+                return true;
+            } else if (searchGrid(row - 1, col + 1, word, index + 1)) {
+                //go up and right
+                return true;
+            } else if (searchGrid(row, col - 1, word, index + 1)) {
+                // go left
+                return true;
+            } else if (searchGrid(row, col + 1, word, index + 1)) {
+                // go right
+                return true;
+            } else if (searchGrid(row + 1, col -1, word, index + 1)) {
+                // go down and left
+                return true;
+            } else if (searchGrid(row + 1, col, word, index + 1)) {
+                // go down
+                return true;
+            } else if (searchGrid(row + 1, col + 1, word, index + 1)) {
+                // go down and right
+                return true;
+            }
+
+            // undo the visited spot for backtracking purposes
+            this.board[row][col] = character.toLowerCase();
         }
         return false;
     }
