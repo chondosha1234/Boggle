@@ -162,11 +162,11 @@ public class Boggle {
     private boolean searchGrid(int row, int col, String word, int index) {
 
         // check board bounds
-        if (row < 0 || row > this.board.length || col < 0 || col > this.board[0].length) {
+        if (index >= word.length() || row < 0 || row >= this.board.length || col < 0 || col >= this.board[0].length) {
             return false;
         }
 
-        String s = Character.toString(word.charAt(index));
+        String s = Character.toString(word.charAt(index)).toLowerCase();
         String character = this.board[row][col];
 
         // space is already visited if the character is upper case
@@ -176,6 +176,11 @@ public class Boggle {
 
         if (s.equals(character)) {
             this.board[row][col] = character.toUpperCase();
+
+            // have matched the last letter of the word
+            if (index == word.length()-1) {
+                return true;
+            }
 
             if (searchGrid(row - 1, col - 1, word, index + 1)) {
                 // go up and left
