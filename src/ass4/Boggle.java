@@ -2,9 +2,7 @@ package ass4;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Boggle {
 
@@ -119,6 +117,7 @@ public class Boggle {
             int rowCounter = 0;
             int columnCounter;
             while (scanner.hasNextLine()) {
+
                 columnCounter = 0;
                 while (columnCounter < width) {
                     board[rowCounter][columnCounter] = scanner.next();
@@ -138,12 +137,82 @@ public class Boggle {
         }
     }
 
+    /**
+     *
+     * @param word
+     * @return boolean
+     *
+     * Method to be the starting point of a search for a word in the board
+     */
     public boolean matchWord(String word) {
-        return true;
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                resetBoardVisits();
+                if (searchGrid(i, j, word, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Recursive method to implement the backtracking searching algorithm
+     */
+    private boolean searchGrid(int row, int col, String word, int index) {
+
+        String s = Character.toString(word.charAt(index));
+        String character = this.board[row][col];
+
+        // space is already visited if the character is upper case
+        if (character.equals(character.toUpperCase())) {
+            return false;
+        }
+
+        if (s.equals(character)) {
+            this.board[row][col] = character.toUpperCase();
+            return searchGrid(row + 1, col, word, index + 1);
+
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to set the boggle board characters to lower case, since a search starting from one point
+     * will set them to upper case to mark them as visited
+     */
+    private void resetBoardVisits() {
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                this.board[i][j] = this.board[i][j].toLowerCase();
+            }
+        }
     }
 
     public static List<String> getAllValidWords(String dictionaryName, String boardName) {
-        return null;
+        Boggle boggle = new Boggle(boardName);
+
+        List<String> validWords = new LinkedList<>();
+
+        try {
+            File file = new File(dictionaryName);
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String word = scanner.nextLine();
+                if (boggle.matchWord(word)) {
+                    validWords.add(word);
+                }
+            }
+
+            scanner.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("No dictionary file found!");
+        }
+
+        return validWords;
     }
 
     public static void main(String[] args) {
