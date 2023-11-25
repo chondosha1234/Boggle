@@ -145,6 +145,7 @@ public class Boggle {
      * Method to be the starting point of a search for a word in the board
      */
     public boolean matchWord(String word) {
+
         for (int i = 0; i < this.board.length; i++) {
             for (int j = 0; j < this.board[0].length; j++) {
                 resetBoardVisits();
@@ -237,9 +238,12 @@ public class Boggle {
 
             while (scanner.hasNextLine()) {
                 String word = scanner.nextLine();
+
                 if (boggle.matchWord(word)) {
                     validWords.add(word);
                 }
+
+
             }
 
             scanner.close();
@@ -273,8 +277,14 @@ public class Boggle {
      * If this is put into the other methods like searchGrid, it would get used and print out boards
      * everytime the getAllValidWords method searches a word
      */
-    private void highlightBoard() {
+    private void printHighlightBoard() {
+        for (String[] str : this.board) {
+            for (String s : str) {
+                System.out.print(s + " ");
 
+            }
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
@@ -302,7 +312,7 @@ public class Boggle {
 
             if (boggle.matchWord(word)) {
                 System.out.println("That word is on the board!");
-                boggle.highlightBoard();
+                boggle.printHighlightBoard();
                 points += word.length()-2;
                 System.out.println("You receive " + (word.length()-2) + " points.");
                 System.out.println("You now have " + points + " points.");
