@@ -252,12 +252,6 @@ public class Boggle {
         return validWords;
     }
 
-    public static void main(String[] args) {
-        Boggle b = new Boggle(BOGGLE_1992);
-
-        System.out.println(b);
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -271,6 +265,66 @@ public class Boggle {
         }
 
         return sb.toString();
+    }
+
+    /**
+     *
+     * Helper method to create board with highlighted letters for a correct answer.
+     * If this is put into the other methods like searchGrid, it would get used and print out boards
+     * everytime the getAllValidWords method searches a word
+     */
+    private void highlightBoard() {
+
+    }
+
+    public static void main(String[] args) {
+        String boardName = args[0];
+        String dictName = args[1];
+
+        Scanner scanner = new Scanner(System.in);
+        int points = 0;
+        boolean gameOver = false;
+
+        Boggle boggle = new Boggle(boardName);
+
+        System.out.println("Welcome to the game of Boggle!\n");
+
+        while (!gameOver) {
+            System.out.println("\n" + boggle);
+
+            System.out.println("\nPlease enter a word that can be made from the letters: ");
+            String word = scanner.nextLine();
+
+            if (word.length() < 3) {
+                System.out.println("That word is too short! Try again...");
+                continue;
+            }
+
+            if (boggle.matchWord(word)) {
+                System.out.println("That word is on the board!");
+                boggle.highlightBoard();
+                points += word.length()-2;
+                System.out.println("You receive " + (word.length()-2) + " points.");
+                System.out.println("You now have " + points + " points.");
+            } else {
+                System.out.println("That word is not on the board!");
+            }
+
+            System.out.println("\nDo you want to end the game? (y/n)");
+            String answer = scanner.nextLine();
+            if (answer.equalsIgnoreCase("y")) {
+                gameOver = true;
+                System.out.println("You got a total of " + points + " points!");
+                System.out.println("Do you want to see the maximum number of words that can be generated from this board? (y/n)");
+                String choice = scanner.nextLine();
+
+                if (choice.equalsIgnoreCase("y")) {
+                    List<String> allValidWords = getAllValidWords(dictName, boardName);
+                    System.out.println("There are " + allValidWords.size() + " possible words in this board.");
+                }
+            }
+        }
+
     }
 
 }

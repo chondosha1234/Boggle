@@ -154,10 +154,11 @@ public class BoggleTest {
 			}
 			System.out.println("All good\n");			
 		}
-    	
+
+		// added "src/" to paths
     	//test exhaustive search with a given board and given dictionary
-    	String dictName = "ass4/dictionary.txt";
-    	String boardName = "ass4/board.txt";
+    	String dictName = "src/ass4/dictionary.txt";
+    	String boardName = "src/ass4/board.txt";
     	List<String> allWords = Boggle.getAllValidWords(dictName, boardName);
     	System.out.println("Found "+allWords.size() +" valid words using '"+ dictName
     			+ "' and '" + boardName +"'.");  //should be 1381 words found in less than 5 sec
