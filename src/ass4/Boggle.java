@@ -35,9 +35,7 @@ public class Boggle {
     };
 
 
-    private String[][] board;
-
-    private final Random random = new Random();
+    protected String[][] board;
 
 
     public Boggle(int N) {
@@ -54,6 +52,8 @@ public class Boggle {
         for (double val : cumulativeFreq) {
             System.out.println(val);
         }
+
+        Random random = new Random();
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -78,11 +78,20 @@ public class Boggle {
         this.board = board;
     }
 
-    public Boggle(String[] dice) {
+    public Boggle(String[] dice, int seed) {
 
         // dice array will have length equal to total number of board spaces, which will be a square of the dimensions i.e. 4x4, 5x5
         int dimension = (int) Math.sqrt(dice.length);
         this.board = new String[dimension][dimension];
+
+        Random random = new Random(seed);
+
+        for (int i = 0; i < dice.length; i++) {
+            int j = random.nextInt(dice.length);
+            String temp = dice[j];
+            dice[j] = dice[i];
+            dice[i] = temp;
+        }
 
         int diceIndex = 0;
 
@@ -96,7 +105,40 @@ public class Boggle {
 
                 diceIndex++;
 
-                this.board[i][j] = Character.toString(letter);
+                this.board[i][j] = Character.toString(letter).toLowerCase();
+            }
+        }
+
+    }
+
+    public Boggle(String[] dice) {
+
+        // dice array will have length equal to total number of board spaces, which will be a square of the dimensions i.e. 4x4, 5x5
+        int dimension = (int) Math.sqrt(dice.length);
+        this.board = new String[dimension][dimension];
+
+        Random random = new Random();
+
+        for (int i = 0; i < dice.length; i++) {
+            int j = random.nextInt(dice.length);
+            String temp = dice[j];
+            dice[j] = dice[i];
+            dice[i] = temp;
+        }
+
+        int diceIndex = 0;
+
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+
+                int letterIndex = random.nextInt(6);
+                char letter = ' ';
+
+                letter = dice[diceIndex].charAt(letterIndex);
+
+                diceIndex++;
+
+                this.board[i][j] = Character.toString(letter).toLowerCase();
             }
         }
 
@@ -120,7 +162,7 @@ public class Boggle {
 
                 columnCounter = 0;
                 while (columnCounter < width) {
-                    board[rowCounter][columnCounter] = scanner.next();
+                    board[rowCounter][columnCounter] = scanner.next().toLowerCase();
                     columnCounter++;
                 }
                 rowCounter++;
@@ -164,6 +206,10 @@ public class Boggle {
 
         // check board bounds
         if (index >= word.length() || row < 0 || row >= this.board.length || col < 0 || col >= this.board[0].length) {
+            return false;
+        }
+
+        if (word.length() < 3) {
             return false;
         }
 
@@ -240,12 +286,10 @@ public class Boggle {
                 String word = scanner.nextLine();
 
                 if (boggle.matchWord(word)) {
-                    validWords.add(word);
+                    validWords.add(word.toLowerCase());
                 }
 
-
             }
-
             scanner.close();
 
         } catch (FileNotFoundException e) {
@@ -262,10 +306,10 @@ public class Boggle {
 
         for (String[] str : this.board) {
             for (String s : str) {
-                sb.append(s.toLowerCase());
+                sb.append(s);
                 sb.append(" ");
             }
-            sb.append("\n");
+            sb.append(System.lineSeparator());
         }
 
         return sb.toString();
